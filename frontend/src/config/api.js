@@ -1,21 +1,7 @@
 import axios from 'axios';
 
-// Detect if we're on mobile or laptop
-const getApiUrl = () => {
-  const hostname = window.location.hostname;
-  
-  console.log('Current hostname:', hostname);
-  
-  // If localhost, use localhost backend
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:5000/api';
-  }
-  
-  // For mobile/network access, use the same host
-  return `http://${hostname}:5000/api`;
-};
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-const API_URL = getApiUrl();
 console.log('API URL set to:', API_URL);
 
 const api = axios.create({
@@ -23,7 +9,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 second timeout
+  timeout: 10000,
 });
 
 // Add auth token to requests
