@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+console.log('ENV VAR:', process.env.REACT_APP_API_URL);
+console.log('All ENV:', JSON.stringify(process.env));
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
