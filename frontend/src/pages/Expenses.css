@@ -1,0 +1,134 @@
+.expenses-page {
+  padding-bottom: 100px;
+}
+
+.monthly-summary {
+  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.summary-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+}
+
+.summary-amount {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.summary-meta {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.expense-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.expense-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 4px;
+}
+
+.expense-item {
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.expense-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.expense-category {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.expense-description {
+  font-size: 13px;
+  color: var(--gray-400);
+  margin-bottom: 6px;
+  word-wrap: break-word;
+}
+
+.expense-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.payment-badge,
+.subcategory-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.payment-badge {
+  background: rgba(176, 14, 185, 0.15);
+  color: var(--primary-1);
+}
+
+.subcategory-badge {
+  background: var(--gray-800);
+  color: var(--gray-400);
+}
+
+.expense-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.expense-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.expense-delete {
+  background: transparent;
+  border: none;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.expense-delete:hover {
+  color: var(--primary-3);
+}

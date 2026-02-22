@@ -1,0 +1,225 @@
+.checklist-page {
+  padding-bottom: 100px;
+}
+
+/* Tabs */
+.cl-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.cl-tabs::-webkit-scrollbar { height: 2px; }
+
+.cl-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
+  border-radius: 20px;
+  color: var(--gray-400);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.cl-tab:hover { background: var(--gray-800); }
+
+.cl-tab.active {
+  background: var(--primary-1);
+  color: var(--white);
+  border-color: var(--primary-1);
+}
+
+.cl-tab-count {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 11px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.cl-tab.active .cl-tab-count { background: rgba(255,255,255,0.25); }
+
+.cl-tab-new {
+  color: var(--primary-1);
+  border-style: dashed;
+}
+
+/* New list form */
+.cl-new-list-form {
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.cl-new-list-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.cl-new-list-actions .btn { flex: 1; }
+
+/* List body */
+.cl-list-body {
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.cl-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--gray-800);
+}
+
+.cl-list-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.cl-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cl-action-btn {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cl-action-btn:hover { background: var(--gray-800); color: var(--white); }
+.cl-action-btn.danger:hover { color: var(--primary-3); }
+
+/* Add item row */
+.cl-add-item {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--gray-800);
+}
+
+.cl-add-item .input {
+  flex: 1;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.cl-add-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--primary-1);
+  border: none;
+  color: var(--white);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.cl-add-btn:active { transform: scale(0.95); }
+
+/* Items */
+.cl-items {
+  padding: 8px 0;
+}
+
+.cl-empty-msg {
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 14px;
+  padding: 32px 20px;
+}
+
+.cl-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  transition: background 0.15s;
+}
+
+.cl-item:hover { background: var(--gray-800); }
+
+.cl-item.checked .cl-item-text {
+  text-decoration: line-through;
+  color: var(--gray-500);
+}
+
+.cl-check {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.cl-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--gray-600);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 13px;
+  color: var(--white);
+}
+
+.cl-checkbox.checked {
+  background: var(--primary-1);
+  border-color: var(--primary-1);
+}
+
+.cl-item-text {
+  flex: 1;
+  font-size: 15px;
+  color: var(--white);
+  line-height: 1.4;
+}
+
+.cl-delete {
+  background: none;
+  border: none;
+  color: var(--gray-700);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.cl-delete:hover { color: var(--primary-3); }

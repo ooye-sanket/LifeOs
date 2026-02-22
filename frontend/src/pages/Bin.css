@@ -1,0 +1,135 @@
+.bin-page {
+  padding-bottom: 100px;
+}
+
+.empty-bin-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: rgba(255, 79, 107, 0.15);
+  border: 1px solid var(--primary-3);
+  border-radius: 12px;
+  color: var(--primary-3);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+}
+
+.empty-bin-btn:hover {
+  background: rgba(255, 79, 107, 0.25);
+  transform: translateY(-2px);
+}
+
+.empty-bin-btn svg {
+  font-size: 20px;
+}
+
+.bin-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.bin-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.bin-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bin-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bin-item-type {
+  font-size: 11px;
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bin-item-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bin-item-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.bin-item-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.bin-action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.restore-btn {
+  color: var(--primary-1);
+}
+
+.restore-btn:hover {
+  background: rgba(176, 14, 185, 0.1);
+}
+
+.bin-action-btn.delete-btn {
+  color: var(--primary-3);
+}
+
+.bin-action-btn.delete-btn:hover {
+  background: rgba(255, 79, 107, 0.1);
+}
+
+.bin-note {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.bin-note p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
