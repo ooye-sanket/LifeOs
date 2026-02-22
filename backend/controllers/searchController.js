@@ -13,7 +13,7 @@ exports.globalSearch = async (req, res) => {
     const q = query.toLowerCase();
 
     // Search tasks
-    if (!filter || filter === 'all' || filter === 'completed' || filter === 'Checklist') {
+    if (!filter || filter === 'all' || filter === 'completed' || filter === 'checklist') {
       const snapshot = await db.collection('tasks').where('userId', '==', userId).get();
       let tasks = snapshotToArray(snapshot);
 

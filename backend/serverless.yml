@@ -1,0 +1,35 @@
+service: lifeos-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1        # Mumbai - closest for India
+  timeout: 30               # 30 second max per request
+  memorySize: 256           # 256MB RAM (free tier friendly)
+  environment:
+    IS_LAMBDA: true
+    JWT_SECRET: ${env:JWT_SECRET}
+    CLOUDINARY_CLOUD_NAME: ${env:CLOUDINARY_CLOUD_NAME}
+    CLOUDINARY_API_KEY: ${env:CLOUDINARY_API_KEY}
+    CLOUDINARY_API_SECRET: ${env:CLOUDINARY_API_SECRET}
+    FRONTEND_URL: ${env:FRONTEND_URL}
+    # Firebase service account - injected as env var (no file needed on Lambda)
+    FIREBASE_PROJECT_ID: ${env:FIREBASE_PROJECT_ID}
+    FIREBASE_PRIVATE_KEY: ${env:FIREBASE_PRIVATE_KEY}
+    FIREBASE_CLIENT_EMAIL: ${env:FIREBASE_CLIENT_EMAIL}
+
+functions:
+  api:
+    handler: server.handler
+    url: true                # Creates a Lambda Function URL (free, no API Gateway needed)
+    events:
+      - httpApi: '*'
+
+package:
+  exclude:
+    - node_modules/.cache/**
+    - .git/**
+    - uploads/**
+    - '*.zip'
+    - SETUP_GUIDE.md
+    - DEPLOYMENT_GUIDE.md

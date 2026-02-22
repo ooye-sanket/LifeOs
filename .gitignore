@@ -25,3 +25,7 @@ Thumbs.db
 
 # Editor
 .vscode/
+
+# Serverless
+backend/.serverless/
+backend/*.zip

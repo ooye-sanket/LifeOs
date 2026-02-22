@@ -1,24 +1,38 @@
 const admin = require('firebase-admin');
-const path = require('path');
 
-// Initialize Firebase Admin SDK
-// It reads your serviceAccountKey.json from the root of the backend folder
-const serviceAccount = require(path.join(__dirname, '..', 'serviceAccountKey.json'));
+// Supports BOTH local (serviceAccountKey.json) AND Lambda (env vars)
+let firebaseConfig;
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+if (process.env.IS_LAMBDA) {
+  // On Lambda: credentials come from environment variables
+  firebaseConfig = {
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    }),
+  };
+} else {
+  // Local dev: use serviceAccountKey.json file
+  const path = require('path');
+  const serviceAccount = require(path.join(__dirname, '..', 'serviceAccountKey.json'));
+  firebaseConfig = {
+    credential: admin.credential.cert(serviceAccount),
+  };
+}
+
+// Only init once (important for Lambda warm starts)
+if (!admin.apps.length) {
+  admin.initializeApp(firebaseConfig);
+}
 
 const db = admin.firestore();
 
-// Helper: convert Firestore doc snapshot to plain object with _id field
-// This keeps your frontend working without changes (it expects _id like MongoDB)
 const docToObj = (doc) => {
   if (!doc.exists) return null;
   return { _id: doc.id, ...doc.data() };
 };
 
-// Helper: convert a query snapshot to array of plain objects
 const snapshotToArray = (snapshot) => {
   return snapshot.docs.map((doc) => ({ _id: doc.id, ...doc.data() }));
 };
