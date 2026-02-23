@@ -8,16 +8,18 @@ exports.getBudget = async (req, res) => {
     const snapshot = await db
       .collection(COLLECTION)
       .where('userId', '==', req.userId)
-      .orderBy('createdAt', 'desc')
-      .limit(1)
       .get();
 
     if (snapshot.empty) {
       return res.json(null);
     }
 
-    const doc = snapshot.docs[0];
-    res.json({ _id: doc.id, ...doc.data() });
+    // Sort in memory to avoid needing a Firestore composite index
+    const docs = snapshot.docs
+      .map(d => ({ _id: d.id, ...d.data() }))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json(docs[0]);
   } catch (error) {
     console.error('getBudget error:', error);
     res.status(500).json({ error: error.message });
