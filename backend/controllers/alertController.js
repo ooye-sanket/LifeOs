@@ -74,3 +74,21 @@ exports.deleteAlert = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Update alert
+exports.updateAlert = async (req, res) => {
+  try {
+    const docRef = db.collection(COLLECTION).doc(req.params.id);
+    const doc = await docRef.get();
+    if (!doc.exists || doc.data().userId !== req.userId) {
+      return res.status(404).json({ error: 'Alert not found' });
+    }
+    const { title, description, alertDate, priority } = req.body;
+    await docRef.update({ title, description, alertDate, priority, updatedAt: new Date().toISOString() });
+    const updated = await docRef.get();
+    res.json({ _id: updated.id, ...updated.data() });
+  } catch (error) {
+    console.error('updateAlert error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};

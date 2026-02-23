@@ -328,3 +328,11 @@
   margin-top: 8px;
 }
 .place-modal-actions .btn { flex: 1; }
+.edit-btn-sm {
+  background: transparent; border: none;
+  color: var(--gray-400); cursor: pointer;
+  padding: 4px; font-size: 16px;
+  transition: color 0.2s ease;
+  margin-right: 2px;
+}
+.edit-btn-sm:hover { color: var(--primary-1); }

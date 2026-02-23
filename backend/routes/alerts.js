@@ -7,6 +7,7 @@ router.use(authenticate);
 
 router.get('/', alertController.getAlerts);
 router.post('/', alertController.createAlert);
+router.put('/:id', alertController.updateAlert);
 router.put('/:id/read', alertController.markAsRead);
 router.delete('/:id', alertController.deleteAlert);
 

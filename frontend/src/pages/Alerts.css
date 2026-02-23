@@ -130,3 +130,10 @@
   background: rgba(255, 79, 107, 0.15);
   color: var(--primary-3);
 }
+.edit-btn {
+  background: transparent; border: none;
+  color: var(--gray-400); cursor: pointer;
+  padding: 6px; font-size: 16px; border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.edit-btn:hover { color: var(--primary-1); background: rgba(176,14,185,0.1); }

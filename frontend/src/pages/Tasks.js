@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IoAddOutline, IoCheckmarkOutline, IoTrashOutline, IoChevronBackOutline, IoChevronForwardOutline, IoStar, IoStarOutline, IoCalendarOutline } from 'react-icons/io5';
+import { IoAddOutline, IoCheckmarkOutline, IoTrashOutline, IoChevronBackOutline, IoChevronForwardOutline, IoStar, IoStarOutline, IoCalendarOutline, IoPencilOutline } from 'react-icons/io5';
 import api from '../config/api';
 import './Tasks.css';
 
@@ -9,25 +9,14 @@ const MONTHS = ['January','February','March','April','May','June','July','August
 const MiniCalendar = ({ selectedDate, onSelectDate, taskDates }) => {
   const [viewYear, setViewYear] = useState(selectedDate.getFullYear());
   const [viewMonth, setViewMonth] = useState(selectedDate.getMonth());
-
   const today = new Date();
-
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-
-  const prevMonth = () => {
-    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
-    else setViewMonth(m => m - 1);
-  };
-  const nextMonth = () => {
-    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
-    else setViewMonth(m => m + 1);
-  };
-
+  const prevMonth = () => { if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); } else setViewMonth(m => m - 1); };
+  const nextMonth = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); } else setViewMonth(m => m + 1); };
   const cells = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
-
   return (
     <div className="mini-calendar">
       <div className="mini-cal-header">
@@ -35,9 +24,7 @@ const MiniCalendar = ({ selectedDate, onSelectDate, taskDates }) => {
         <span className="mini-cal-title">{MONTHS[viewMonth]} {viewYear}</span>
         <button className="mini-cal-nav" onClick={nextMonth}><IoChevronForwardOutline /></button>
       </div>
-      <div className="mini-cal-days-row">
-        {DAYS.map((d, i) => <span key={i} className="mini-cal-day-label">{d}</span>)}
-      </div>
+      <div className="mini-cal-days-row">{DAYS.map((d, i) => <span key={i} className="mini-cal-day-label">{d}</span>)}</div>
       <div className="mini-cal-grid">
         {cells.map((day, i) => {
           if (!day) return <span key={i} />;
@@ -48,11 +35,7 @@ const MiniCalendar = ({ selectedDate, onSelectDate, taskDates }) => {
           const dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
           const hasTasks = taskDates.has(dateStr);
           return (
-            <button
-              key={i}
-              className={`mini-cal-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${isPast ? 'past' : ''}`}
-              onClick={() => onSelectDate(dateObj)}
-            >
+            <button key={i} className={`mini-cal-cell ${isToday?'today':''} ${isSelected?'selected':''} ${isPast?'past':''}`} onClick={() => onSelectDate(dateObj)}>
               {day}
               {hasTasks && <span className="task-dot" />}
             </button>
@@ -63,23 +46,21 @@ const MiniCalendar = ({ selectedDate, onSelectDate, taskDates }) => {
   );
 };
 
+const EMPTY_TASK = { title: '', description: '', priority: 'Medium', category: 'Personal' };
+
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [allTaskDates, setAllTaskDates] = useState(new Set());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [activeTab, setActiveTab] = useState('today'); // 'today' | 'tomorrow' | 'someday'
+  const [activeTab, setActiveTab] = useState('today');
   const [showAddTask, setShowAddTask] = useState(false);
-  const [newTask, setNewTask] = useState({
-    title: '', description: '', priority: 'Medium', category: 'Personal',
-  });
+  const [newTask, setNewTask] = useState(EMPTY_TASK);
+  // Edit state
+  const [editingTask, setEditingTask] = useState(null); // the full task object
+  const [editForm, setEditForm] = useState(EMPTY_TASK);
 
-  useEffect(() => {
-    loadTasks();
-  }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    loadAllTaskDates();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { loadTasks(); }, [selectedDate]); // eslint-disable-line
+  useEffect(() => { loadAllTaskDates(); }, []); // eslint-disable-line
 
   const toLocalDateStr = (date) => {
     const y = date.getFullYear();
@@ -101,23 +82,15 @@ const Tasks = () => {
 
   const loadTasks = async () => {
     try {
-      const dateStr = toLocalDateStr(selectedDate);
-      const response = await api.get(`/tasks?date=${dateStr}`);
+      const response = await api.get(`/tasks?date=${toLocalDateStr(selectedDate)}`);
       setTasks(response.data);
-    } catch (error) {
-      console.error('Error loading tasks:', error);
-    }
+    } catch (error) { console.error('Error loading tasks:', error); }
   };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === 'today') setSelectedDate(new Date());
     else if (tab === 'tomorrow') setSelectedDate(new Date(Date.now() + 86400000));
-    // 'someday' keeps the calendar visible, selectedDate stays as-is
-  };
-
-  const handleCalendarSelect = (date) => {
-    setSelectedDate(date);
   };
 
   const handleAddTask = async (e) => {
@@ -125,53 +98,88 @@ const Tasks = () => {
     if (!newTask.title.trim()) return;
     try {
       await api.post('/tasks', { ...newTask, date: toLocalDateStr(selectedDate) });
-      setNewTask({ title: '', description: '', priority: 'Medium', category: 'Personal' });
+      setNewTask(EMPTY_TASK);
       setShowAddTask(false);
+      loadTasks(); loadAllTaskDates();
+    } catch (error) { console.error('Error adding task:', error); }
+  };
+
+  const openEdit = (task) => {
+    setEditingTask(task);
+    setEditForm({ title: task.title, description: task.description || '', priority: task.priority, category: task.category });
+  };
+
+  const handleEditSave = async (e) => {
+    e.preventDefault();
+    if (!editForm.title.trim()) return;
+    try {
+      await api.put(`/tasks/${editingTask._id}`, editForm);
+      setEditingTask(null);
       loadTasks();
-      loadAllTaskDates();
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
+    } catch (error) { console.error('Error updating task:', error); }
   };
 
   const toggleTask = async (taskId) => {
-    try {
-      await api.patch(`/tasks/${taskId}/toggle`);
-      loadTasks();
-    } catch (error) {
-      console.error('Error toggling task:', error);
-    }
+    try { await api.patch(`/tasks/${taskId}/toggle`); loadTasks(); }
+    catch (error) { console.error('Error toggling task:', error); }
   };
 
   const toggleImportant = async (taskId) => {
-    try {
-      await api.patch(`/tasks/${taskId}/important`);
-      loadTasks();
-    } catch (error) {
-      console.error('Error toggling important:', error);
-    }
+    try { await api.patch(`/tasks/${taskId}/important`); loadTasks(); }
+    catch (error) { console.error('Error toggling important:', error); }
   };
 
   const deleteTask = async (taskId) => {
     if (!window.confirm('Delete this task?')) return;
-    try {
-      await api.delete(`/tasks/${taskId}`);
-      loadTasks();
-      loadAllTaskDates();
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
+    try { await api.delete(`/tasks/${taskId}`); loadTasks(); loadAllTaskDates(); }
+    catch (error) { console.error('Error deleting task:', error); }
   };
 
   const isToday = activeTab === 'today';
   const isTomorrow = activeTab === 'tomorrow';
   const isSomeday = activeTab === 'someday';
-
-  const dateLabel = isToday ? 'Today'
-    : isTomorrow ? 'Tomorrow'
-    : selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-
+  const dateLabel = isToday ? 'Today' : isTomorrow ? 'Tomorrow' : selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
   const completedCount = tasks.filter(t => t.completed).length;
+
+  const TaskForm = ({ value, onChange, onSubmit, onCancel, title, submitLabel }) => (
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <h3 className="modal-title">{title}</h3>
+        <form onSubmit={onSubmit}>
+          <div className="input-group">
+            <input type="text" className="input" placeholder="Task title" value={value.title}
+              onChange={e => onChange({...value, title: e.target.value})} autoFocus />
+          </div>
+          <div className="input-group">
+            <textarea className="input" placeholder="Description (optional)" value={value.description}
+              onChange={e => onChange({...value, description: e.target.value})} rows="2" />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Priority</label>
+            <select className="input" value={value.priority} onChange={e => onChange({...value, priority: e.target.value})}>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div className="input-group">
+            <label className="input-label">Category</label>
+            <select className="input" value={value.category} onChange={e => onChange({...value, category: e.target.value})}>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Health">Health</option>
+              <option value="Finance">Finance</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div className="modal-actions">
+            <button type="button" className="btn btn-ghost" onClick={onCancel}>Cancel</button>
+            <button type="submit" className="btn btn-primary">{submitLabel}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 
   return (
     <div className="page tasks-page">
@@ -180,36 +188,16 @@ const Tasks = () => {
         <p className="page-subtitle">{dateLabel}</p>
       </div>
 
-      {/* 3 Tab buttons */}
       <div className="date-selector">
-        <button className={`date-btn ${isToday ? 'active' : ''}`} onClick={() => handleTabChange('today')}>
-          Today
-        </button>
-        <button className={`date-btn ${isTomorrow ? 'active' : ''}`} onClick={() => handleTabChange('tomorrow')}>
-          Tomorrow
-        </button>
-        <button className={`date-btn calendar-btn ${isSomeday ? 'active' : ''}`} onClick={() => handleTabChange('someday')}>
-          <IoCalendarOutline /> Someday
-        </button>
+        <button className={`date-btn ${isToday?'active':''}`} onClick={() => handleTabChange('today')}>Today</button>
+        <button className={`date-btn ${isTomorrow?'active':''}`} onClick={() => handleTabChange('tomorrow')}>Tomorrow</button>
+        <button className={`date-btn calendar-btn ${isSomeday?'active':''}`} onClick={() => handleTabChange('someday')}><IoCalendarOutline /> Someday</button>
       </div>
 
-      {/* Calendar — only shown when Someday is active */}
-      {isSomeday && (
-        <MiniCalendar
-          selectedDate={selectedDate}
-          onSelectDate={handleCalendarSelect}
-          taskDates={allTaskDates}
-        />
-      )}
+      {isSomeday && <MiniCalendar selectedDate={selectedDate} onSelectDate={d => setSelectedDate(d)} taskDates={allTaskDates} />}
 
-      {/* Task count bar */}
-      {tasks.length > 0 && (
-        <div className="tasks-count-bar">
-          <span>{completedCount}/{tasks.length} done</span>
-        </div>
-      )}
+      {tasks.length > 0 && <div className="tasks-count-bar"><span>{completedCount}/{tasks.length} done</span></div>}
 
-      {/* Tasks List */}
       <div className="tasks-list">
         {tasks.length === 0 ? (
           <div className="empty-state">
@@ -233,7 +221,10 @@ const Tasks = () => {
                   <span className="category-badge">{task.category}</span>
                 </div>
               </div>
-              <button className="task-delete" onClick={() => toggleImportant(task._id)} style={{ marginRight: '4px', color: task.isImportant ? '#f59e0b' : 'inherit' }}>
+              <button className="task-delete" onClick={() => openEdit(task)} title="Edit" style={{ color: 'var(--gray-400)' }}>
+                <IoPencilOutline />
+              </button>
+              <button className="task-delete" onClick={() => toggleImportant(task._id)} style={{ color: task.isImportant ? '#f59e0b' : 'inherit' }}>
                 {task.isImportant ? <IoStar /> : <IoStarOutline />}
               </button>
               <button className="task-delete" onClick={() => deleteTask(task._id)}>
@@ -244,52 +235,20 @@ const Tasks = () => {
         )}
       </div>
 
-      {/* FAB */}
-      {!showAddTask && (
-        <button className="fab" onClick={() => setShowAddTask(true)}>
-          <IoAddOutline />
-        </button>
+      {!showAddTask && !editingTask && (
+        <button className="fab" onClick={() => setShowAddTask(true)}><IoAddOutline /></button>
       )}
 
-      {/* Add Task Modal */}
       {showAddTask && (
-        <div className="modal-overlay" onClick={() => setShowAddTask(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3 className="modal-title">New Task · {dateLabel}</h3>
-            <form onSubmit={handleAddTask}>
-              <div className="input-group">
-                <input type="text" className="input" placeholder="Task title" value={newTask.title}
-                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} autoFocus />
-              </div>
-              <div className="input-group">
-                <textarea className="input" placeholder="Description (optional)" value={newTask.description}
-                  onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} rows="2" />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Priority</label>
-                <select className="input" value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}>
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
-              <div className="input-group">
-                <label className="input-label">Category</label>
-                <select className="input" value={newTask.category} onChange={(e) => setNewTask({ ...newTask, category: e.target.value })}>
-                  <option value="Work">Work</option>
-                  <option value="Personal">Personal</option>
-                  <option value="Health">Health</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div className="modal-actions">
-                <button type="button" className="btn btn-ghost" onClick={() => setShowAddTask(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Add Task</button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <TaskForm value={newTask} onChange={setNewTask} onSubmit={handleAddTask}
+          onCancel={() => { setShowAddTask(false); setNewTask(EMPTY_TASK); }}
+          title={`New Task · ${dateLabel}`} submitLabel="Add Task" />
+      )}
+
+      {editingTask && (
+        <TaskForm value={editForm} onChange={setEditForm} onSubmit={handleEditSave}
+          onCancel={() => setEditingTask(null)}
+          title="Edit Task" submitLabel="Save Changes" />
       )}
     </div>
   );
