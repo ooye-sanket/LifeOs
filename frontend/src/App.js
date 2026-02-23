@@ -11,7 +11,8 @@ import PinSetup from './pages/PinSetup';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Tasks from './pages/Tasks';
-import Expenses from './pages/Expenses';
+import Budget from './pages/Budget';
+import Report from './pages/Report';
 import CheckIn from './pages/CheckIn';
 import Documents from './pages/Documents';
 import Notes from './pages/Notes';
@@ -54,32 +55,23 @@ function App() {
                 color: 'var(--text-primary)',
                 border: '1px solid var(--border-color)',
               },
-              success: {
-                iconTheme: {
-                  primary: 'var(--primary-1)',
-                  secondary: 'white',
-                },
-              },
-              error: {
-                iconTheme: {
-                  primary: 'var(--primary-3)',
-                  secondary: 'white',
-                },
-              },
+              success: { iconTheme: { primary: 'var(--primary-1)', secondary: 'white' } },
+              error: { iconTheme: { primary: 'var(--primary-3)', secondary: 'white' } },
             }}
           />
-          
+
           {isAuthenticated && <TopHeader />}
-          
+
           <Routes>
             <Route path="/setup" element={<PinSetup />} />
             <Route path="/login" element={<Login setAuth={setIsAuthenticated} />} />
-            
+
             {isAuthenticated ? (
               <>
                 <Route path="/" element={<Home />} />
                 <Route path="/tasks" element={<Tasks />} />
-                <Route path="/expenses" element={<Expenses />} />
+                <Route path="/budget" element={<Budget />} />
+                <Route path="/report" element={<Report />} />
                 <Route path="/checkin" element={<CheckIn />} />
                 <Route path="/documents" element={<Documents />} />
                 <Route path="/notes" element={<Notes />} />
@@ -94,7 +86,7 @@ function App() {
               <Route path="*" element={<Navigate to="/login" />} />
             )}
           </Routes>
-          
+
           {isAuthenticated && <BottomNav />}
         </div>
       </Router>

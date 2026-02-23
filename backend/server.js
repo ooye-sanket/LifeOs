@@ -47,6 +47,7 @@ const alertsRoutes    = require('./routes/alerts');
 const searchRoutes    = require('./routes/search');
 const habitsRoutes    = require('./routes/habits');
 const upgradesRoutes  = require('./routes/upgrades');
+const budgetRoutes    = require('./routes/budget');
 
 app.use('/api/auth',      authRoutes);
 app.use('/api/tasks',     tasksRoutes);
@@ -59,6 +60,7 @@ app.use('/api/alerts',    alertsRoutes);
 app.use('/api/search',    searchRoutes);
 app.use('/api/habits',    habitsRoutes);
 app.use('/api/upgrades',  upgradesRoutes);
+app.use('/api/budget',    budgetRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

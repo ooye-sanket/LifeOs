@@ -7,7 +7,7 @@ const BottomNav = () => {
   const navItems = [
     { path: '/', icon: IoHomeOutline, label: 'Home' },
     { path: '/tasks', icon: IoCheckboxOutline, label: 'Tasks' },
-    { path: '/expenses', icon: IoWalletOutline, label: 'Money' },
+    { path: '/budget', icon: IoWalletOutline, label: 'Money' },
     { path: '/documents', icon: IoDocumentTextOutline, label: 'Docs' },
     { path: '/profile', icon: IoPersonOutline, label: 'You' },
   ];

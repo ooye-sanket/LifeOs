@@ -1,47 +1,157 @@
 .expenses-page {
-  padding-bottom: 100px;
+  padding-bottom: 120px;
 }
 
-.monthly-summary {
-  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
-  border-radius: 16px;
-  padding: 24px;
-  text-align: center;
+/* ── Period Filter ── */
+.period-filter-bar {
+  margin-bottom: 12px;
+}
+.period-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.period-icon {
+  color: var(--primary-1);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.period-select {
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  width: 100%;
+  outline: none;
+}
+.period-select option {
+  background: var(--gray-800);
+  color: var(--white);
+}
+
+/* ── Custom Date Picker ── */
+.custom-date-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.date-input {
+  flex: 1;
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--white);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+.date-input:focus { border-color: var(--primary-1); }
+.date-sep {
+  color: var(--gray-400);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Summary Cards ── */
+.summary-cards-row {
+  display: flex;
+  gap: 10px;
   margin-bottom: 24px;
 }
-
-.summary-label {
-  font-size: 12px;
+.summary-card {
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
+  border-radius: 16px;
+  padding: 16px;
+}
+.summary-card--main {
+  flex: 1.4;
+  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+  border: none;
+  text-align: center;
+}
+.summary-card--main .summary-card-label {
+  color: rgba(255,255,255,0.75);
+}
+.summary-card--main .summary-card-amount {
+  color: #fff;
+}
+.summary-card--main .summary-card-meta {
+  color: rgba(255,255,255,0.65);
+}
+.summary-cards-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.summary-card--sm {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 14px;
+}
+.summary-card--toggle {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.summary-card--toggle.active {
+  border-color: var(--primary-1);
+  background: rgba(176,14,185,0.1);
+}
+.summary-card-label {
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 8px;
-}
-
-.summary-amount {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--white);
+  color: var(--gray-400);
   margin-bottom: 4px;
 }
-
-.summary-meta {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
+.summary-card-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+.summary-card-amount-sm {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+}
+.summary-card-meta {
+  font-size: 11px;
+  color: var(--gray-400);
+}
+.toggle-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary-1);
+  margin-top: 2px;
+}
+.summary-card--toggle.active .toggle-pill {
+  color: var(--primary-2);
 }
 
+/* ── Expenses List ── */
 .expenses-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
 .expense-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
 .expense-date {
   font-size: 12px;
   font-weight: 600;
@@ -50,7 +160,6 @@
   letter-spacing: 0.05em;
   padding: 0 4px;
 }
-
 .expense-item {
   background: var(--gray-900);
   border: 1px solid var(--gray-800);
@@ -61,74 +170,61 @@
   justify-content: space-between;
   gap: 12px;
 }
-
-.expense-details {
-  flex: 1;
-  min-width: 0;
-}
-
+.expense-details { flex: 1; min-width: 0; }
 .expense-category {
   font-size: 15px;
   font-weight: 500;
   color: var(--white);
   margin-bottom: 4px;
 }
-
 .expense-description {
   font-size: 13px;
   color: var(--gray-400);
   margin-bottom: 6px;
   word-wrap: break-word;
 }
-
-.expense-meta {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.payment-badge,
-.subcategory-badge {
+.expense-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.payment-badge, .subcategory-badge {
   font-size: 11px;
   padding: 3px 8px;
   border-radius: 6px;
   font-weight: 500;
 }
-
-.payment-badge {
-  background: rgba(176, 14, 185, 0.15);
-  color: var(--primary-1);
-}
-
-.subcategory-badge {
-  background: var(--gray-800);
-  color: var(--gray-400);
-}
-
-.expense-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.expense-amount {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--white);
-  white-space: nowrap;
-}
-
+.payment-badge { background: rgba(176,14,185,0.15); color: var(--primary-1); }
+.subcategory-badge { background: var(--gray-800); color: var(--gray-400); }
+.expense-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.expense-amount { font-size: 18px; font-weight: 700; color: var(--white); white-space: nowrap; }
 .expense-delete {
-  background: transparent;
-  border: none;
-  color: var(--gray-600);
+  background: transparent; border: none; color: var(--gray-600);
+  cursor: pointer; padding: 4px; font-size: 16px; transition: all 0.2s ease;
+}
+.expense-delete:hover { color: var(--primary-3); }
+
+/* ── Get Report Button ── */
+.report-btn-wrap {
+  margin-top: 32px;
+  padding-bottom: 8px;
+}
+.report-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: var(--gray-900);
+  border: 1px solid var(--gray-700);
+  border-radius: 14px;
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  padding: 4px;
-  font-size: 16px;
   transition: all 0.2s ease;
 }
-
-.expense-delete:hover {
-  color: var(--primary-3);
+.report-btn:hover {
+  border-color: var(--primary-1);
+  background: rgba(176,14,185,0.08);
+  color: var(--primary-1);
 }
+.report-btn svg { font-size: 20px; }

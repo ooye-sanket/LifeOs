@@ -8,6 +8,7 @@ router.use(authenticate);
 router.get('/', expenseController.getExpenses);
 router.post('/', expenseController.createExpense);
 router.get('/summary/:year/:month', expenseController.getMonthlySummary);
+router.get('/report', expenseController.getReport);
 router.put('/:id', expenseController.updateExpense);
 router.delete('/:id', expenseController.deleteExpense);
 

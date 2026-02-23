@@ -122,3 +122,78 @@ exports.deleteExpense = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get report data for a date range
+exports.getReport = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: 'startDate and endDate are required' });
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const snapshot = await db.collection(COLLECTION)
+      .where('userId', '==', req.userId)
+      .get();
+
+    const allExpenses = snapshotToArray(snapshot);
+    const expenses = allExpenses.filter(e => {
+      const d = new Date(e.date);
+      return d >= start && d <= end;
+    });
+
+    expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+
+    // Per category totals + counts
+    const byCategory = {};
+    expenses.forEach(e => {
+      if (!byCategory[e.category]) {
+        byCategory[e.category] = { total: 0, count: 0, transactions: [] };
+      }
+      byCategory[e.category].total += Number(e.amount);
+      byCategory[e.category].count += 1;
+      byCategory[e.category].transactions.push(e);
+    });
+
+    // Top 5 transactions
+    const top5 = [...expenses]
+      .sort((a, b) => Number(b.amount) - Number(a.amount))
+      .slice(0, 5);
+
+    // Daily spend for chart
+    const dailySpend = {};
+    expenses.forEach(e => {
+      const day = new Date(e.date).toISOString().split('T')[0];
+      dailySpend[day] = (dailySpend[day] || 0) + Number(e.amount);
+    });
+
+    // Biggest category insight
+    let topCategory = null;
+    let topCategoryAmount = 0;
+    Object.entries(byCategory).forEach(([cat, data]) => {
+      if (data.total > topCategoryAmount) {
+        topCategoryAmount = data.total;
+        topCategory = cat;
+      }
+    });
+
+    res.json({
+      total,
+      count: expenses.length,
+      byCategory,
+      top5,
+      dailySpend,
+      topCategory,
+      topCategoryAmount,
+      startDate,
+      endDate,
+    });
+  } catch (error) {
+    console.error('getReport error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
