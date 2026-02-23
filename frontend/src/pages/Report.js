@@ -71,7 +71,7 @@ const Report = () => {
       const range = getDateRange('month');
       fetchReport(range.start, range.end);
     }
-  }, []);
+  }, [fetchReport, searchParams]);
 
   const handlePeriodChange = (val) => {
     setPeriod(val);
